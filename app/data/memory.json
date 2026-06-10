@@ -1,0 +1,10 @@
+[
+    {
+        "usuario": "que tal, dime la secuencia de fibonacci los primero 10 numeros",
+        "respuesta": "Señor, puedo proporcionarle la secuencia de Fibonacci con los primeros 10 números. La secuencia comienza con 0 y 1, y cada número subsiguiente se obtiene sumando el número anterior al anterior. Aquí está la secuencia:\n\n0, 1, 1, 2, 3, 5, 8, 13, 21, 34.\n\n¿Necesita algo más, Señor?"
+    },
+    {
+        "usuario": "salir ",
+        "respuesta": "Señor. ¿En qué puedo ayudarle hoy?"
+    }
+]

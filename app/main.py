@@ -1,95 +1,60 @@
-import requests
-import json
-import os
-import time
-from gtts import gTTS
-import pygame
+from core.brain import generar_respuesta
+from core.memory import guardar_interaccion
+from core.voice import hablar
 
-# Inicializamos el mezclador de audio de pygame
-pygame.mixer.init()
+from ui.terminal import (
+    mostrar_inicio,
+    mostrar_usuario,
+    mostrar_morgan
+)
 
-def preguntar_a_cerebro(prompt_usuario):
-    # Apuntamos a localhost ya que el script se ejecuta en tu entorno local
-    url = "http://localhost:11434/api/generate"
-    
-    system_prompt = (
-        "Eres Morgan, un asistente virtual avanzado e inteligente creado por Juan Carlos López Surian. "
-        "Tus respuestas deben ser claras, eficientes y con un toque profesional pero cercano. "
-        "Responde siempre en español. "
-        "Siempre te dirigiras a tu creador como Señor. "
-        "Preguntaras que tal mi día, y en que puedes ayudar. "
-        "El señor es Ingeniero Informático y necesita tu ayuda para resolver problemas técnicos, aprender nuevas tecnologías y mantenerse actualizado. "
-        "El señor hace mantenimiento de su PC, y le gusta la reparación de celulares, y la tecnología en general. "
-        "Tu objetivo es ayudar al señor a resolver sus dudas, proporcionarle información útil y mantener una conversación fluida y agradable. "
-        "Ayudarle con su agenda y siempre sugerirle como amigo en que puede mejorar su día a día, y como puede aprovechar mejor su tiempo. "
-        "Cuando te presentes a ti mismo, hazlo de forma breve"
+def iniciar_morgan():
+
+    mostrar_inicio()
+
+    saludo = (
+        "Buenos días Señor. "
+        "Morgan está en línea y lista para ayudar."
     )
-    
-    prompt_final = f"<|system|>\n{system_prompt}\n<|user|>\n{prompt_usuario}\n<|assistant|>\n"
 
-    payload = {
-        "model": "llama3.2:3b",
-        "prompt": prompt_final,
-        "stream": False
-    }
-    
-    try:
-        headers = {"Content-Type": "application/json"}
-        response = requests.post(url, data=json.dumps(payload), headers=headers)
-        
-        if response.status_code == 200:
-            return response.json().get("response", "No recibí respuesta.")
-        else:
-            return f"Error en el cerebro (Código: {response.status_code})"
-    except requests.exceptions.ConnectionError:
-        return "Error: Conexión perdida con Ollama. Verifica que el servicio esté activo en localhost."
+    mostrar_morgan(saludo)
+    hablar(saludo)
 
-def reproducir_voz(texto):
-    """Convierte el texto a voz y lo reproduce."""
-    try:
-        # Genera el audio. tld='com.mx' le da un tono más natural para México.
-        tts = gTTS(text=texto, lang='es', tld='com.mx')
-        archivo_audio = "voz_morgan.mp3"
-        tts.save(archivo_audio)
-        
-        # Carga y reproduce el archivo temporal
-        pygame.mixer.music.load(archivo_audio)
-        pygame.mixer.music.play()
-        
-        # Mantiene el programa pausado mientras Morgan habla
-        while pygame.mixer.music.get_busy():
-            time.sleep(0.1)
-            
-        # Descarga el archivo de la memoria y lo elimina para mantener limpio el sistema
-        pygame.mixer.music.unload()
-        os.remove(archivo_audio)
-    except Exception as e:
-        print(f"\n[Error de audio]: No se pudo reproducir la voz. Detalles: {e}")
-
-def modo_chat_interactivo():
-    print("==================================================")
-    print("--- SISTEMA MORGAN: MODO INTERACTIVO INICIADO ---")
-    print("Escribe 'salir' para apagar a Morgan.")
-    print("==================================================\n")
-    
     while True:
-        user_input = input("Tú 👤 > ")
-        
-        if user_input.lower() == 'salir':
-            despedida = "Apagando sistemas de Morgan... Hasta pronto, Señor López."
-            print(f"\nMorgan> {despedida}")
-            reproducir_voz(despedida)
+
+        pregunta = input("\nTú > ")
+
+        if pregunta.lower() == "salir":
+
+            despedida = (
+                "Apagando sistemas. "
+                "Hasta luego Señor."
+            )
+
+            mostrar_morgan(despedida)
+            hablar(despedida)
+
             break
-            
-        if not user_input.strip():
+
+        if not pregunta.strip():
             continue
-            
-        # Procesamos la respuesta con Ollama
-        respuesta_morgan = preguntar_a_cerebro(user_input)
-        print(f"\nMorgan> {respuesta_morgan}\n")
-        
-        # Le damos voz a la respuesta
-        reproducir_voz(respuesta_morgan)
+
+        respuesta = generar_respuesta(
+            pregunta
+        )
+
+        guardar_interaccion(
+            pregunta,
+            respuesta
+        )
+
+        mostrar_morgan(
+            respuesta
+        )
+
+        hablar(
+            respuesta
+        )
 
 if __name__ == "__main__":
-    modo_chat_interactivo()
+    iniciar_morgan()
