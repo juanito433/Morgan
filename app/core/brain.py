@@ -1,3 +1,4 @@
+from core.memory import cargar_memoria
 import requests
 
 OLLAMA_URL = "http://localhost:11434/api/generate"
@@ -34,13 +35,31 @@ Ayudas a organizar tareas y mejorar la productividad.
 """
 
 def generar_respuesta(prompt_usuario):
+    historial = cargar_memoria()
+
+    contexto = ""
+
+    for item in historial:
+        contexto += f"""
+            Usuario: {item['usuario']}
+            Morgan: {item['respuesta']}
+            """
 
     payload = {
         "model": "llama3.2:3b",
-        "prompt": f"{SYSTEM_PROMPT}\n\nUsuario: {prompt_usuario}\nMorgan:",
+        "prompt": f"""
+    {SYSTEM_PROMPT}
+
+    Historial:
+    {contexto}
+
+    Usuario:
+    {prompt_usuario}
+
+    Morgan:
+    """,
         "stream": False
     }
-
     try:
 
         response = requests.post(

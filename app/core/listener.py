@@ -1,33 +1,44 @@
 import whisper
 import sounddevice as sd
 from scipy.io.wavfile import write
+import os
 
-modelo = whisper.load_model("base")
+modelo = whisper.load_model("small")
 
 def escuchar():
 
-    fs = 44100
-    segundos = 5
+    try:
 
-    print("🎤 Escuchando...")
+        fs = 44100
+        segundos = 5
 
-    audio = sd.rec(
-        int(segundos * fs),
-        samplerate=fs,
-        channels=1
-    )
+        print("🎤 Escuchando...")
 
-    sd.wait()
+        audio = sd.rec(
+            int(segundos * fs),
+            samplerate=fs,
+            channels=1
+        )
 
-    write(
-        "temp.wav",
-        fs,
-        audio
-    )
+        sd.wait()
 
-    resultado = modelo.transcribe(
-        "temp.wav",
-        language="es"
-    )
+        write(
+            "temp.wav",
+            fs,
+            audio
+        )
 
-    return resultado["text"]
+        resultado = modelo.transcribe(
+            "temp.wav",
+            language="es"
+        )
+
+        if os.path.exists("temp.wav"):
+            os.remove("temp.wav")
+
+        return resultado["text"]
+
+    except Exception as e:
+
+        print(f"Error Whisper: {e}")
+        return None

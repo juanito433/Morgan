@@ -7,6 +7,7 @@ from ui.terminal import (
     mostrar_usuario,
     mostrar_morgan
 )
+from ui.desktop import iniciar_app
 
 def iniciar_morgan():
 
@@ -57,4 +58,4 @@ def iniciar_morgan():
         )
 
 if __name__ == "__main__":
-    iniciar_morgan()
+    iniciar_app()

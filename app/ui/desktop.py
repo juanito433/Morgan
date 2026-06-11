@@ -1,9 +1,10 @@
 import customtkinter as ctk
+import threading
 
 from core.brain import generar_respuesta
 from core.voice import hablar
-from core.memory import guardar_interaccion
 from core.listener import escuchar
+from core.memory import guardar_interaccion
 
 ctk.set_appearance_mode("dark")
 ctk.set_default_color_theme("blue")
@@ -12,71 +13,71 @@ ctk.set_default_color_theme("blue")
 class MorganApp(ctk.CTk):
 
     def __init__(self):
-
         super().__init__()
 
-        self.title("Morgan AI")
-        self.geometry("1000x700")
+        self.title("Morgan")
+        self.geometry("1200x700")
 
-        self.crear_componentes()
+        self.crear_interfaz()
 
-    def crear_componentes(self):
+    def crear_interfaz(self):
 
-        self.label_titulo = ctk.CTkLabel(
+        self.titulo = ctk.CTkLabel(
             self,
-            text="Morgan AI",
-            font=("Arial", 28, "bold")
+            text="MORGAN",
+            font=("Segoe UI", 30, "bold")
         )
 
-        self.label_titulo.pack(pady=20)
+        self.titulo.pack(pady=20)
 
         self.chat = ctk.CTkTextbox(
             self,
-            width=900,
-            height=450
+            width=1100,
+            height=500,
+            font=("Consolas", 15)
         )
 
-        self.chat.pack(
-            padx=20,
-            pady=10
-        )
+        self.chat.pack(padx=20, pady=10)
 
         self.chat.insert(
             "end",
-            "Morgan: Buenos días Señor.\n\n"
+            "Morgan: Buenos días Señor. Estoy lista para ayudar.\n\n"
         )
 
+        self.frame_input = ctk.CTkFrame(self)
+        self.frame_input.pack(fill="x", padx=20, pady=10)
+
         self.entry = ctk.CTkEntry(
-            self,
-            width=700,
-            placeholder_text="Escribe un mensaje..."
+            self.frame_input,
+            placeholder_text="Escriba un mensaje...",
+            width=850
         )
 
         self.entry.pack(
             side="left",
-            padx=20,
-            pady=20
+            padx=10,
+            pady=10
         )
 
-        self.boton_enviar = ctk.CTkButton(
-            self,
+        self.btn_enviar = ctk.CTkButton(
+            self.frame_input,
             text="Enviar",
             command=self.enviar
         )
 
-        self.boton_enviar.pack(
+        self.btn_enviar.pack(
             side="left",
             padx=10
         )
 
-        self.boton_microfono = ctk.CTkButton(
-            self,
+        self.btn_microfono = ctk.CTkButton(
+            self.frame_input,
             text="🎤",
             width=50,
-            command=self.hablar_microfono
+            command=self.activar_microfono
         )
 
-        self.boton_microfono.pack(
+        self.btn_microfono.pack(
             side="left",
             padx=10
         )
@@ -90,7 +91,22 @@ class MorganApp(ctk.CTk):
 
         self.chat.insert(
             "end",
-            f"\nSeñor: {pregunta}\n"
+            f"Señor: {pregunta}\n"
+        )
+
+        self.entry.delete(0, "end")
+
+        threading.Thread(
+            target=self.procesar_respuesta,
+            args=(pregunta,),
+            daemon=True
+        ).start()
+
+    def procesar_respuesta(self, pregunta):
+
+        self.chat.insert(
+            "end",
+            "Morgan está pensando...\n"
         )
 
         respuesta = generar_respuesta(
@@ -104,35 +120,39 @@ class MorganApp(ctk.CTk):
 
         self.chat.insert(
             "end",
-            f"Morgan: {respuesta}\n"
+            f"Morgan: {respuesta}\n\n"
         )
 
         hablar(
             respuesta
         )
 
-        self.entry.delete(
-            0,
-            "end"
-        )
+    def activar_microfono(self):
 
-    def hablar_microfono(self):
+        threading.Thread(
+            target=self.procesar_microfono,
+            daemon=True
+        ).start()
+
+    def procesar_microfono(self):
+
+        self.chat.insert(
+            "end",
+            "🎤 Escuchando...\n"
+        )
 
         texto = escuchar()
 
         if texto:
 
-            self.entry.delete(
-                0,
-                "end"
+            self.chat.insert(
+                "end",
+                f"Señor (voz): {texto}\n"
             )
 
-            self.entry.insert(
-                0,
+            self.procesar_respuesta(
                 texto
             )
-
-            self.enviar()
 
 
 def iniciar_app():

@@ -6,5 +6,33 @@
     {
         "usuario": "salir ",
         "respuesta": "Señor. ¿En qué puedo ayudarle hoy?"
+    },
+    {
+        "usuario": " Hola, hola, hola.",
+        "respuesta": "Señor. Parece que no necesitas ayuda en este momento. ¿Necesitas algo más? Puedo ofrecerle servicios de organización y productividad si lo desea. Estoy aquí para ayudarle en cualquier cosa que requiera."
+    },
+    {
+        "usuario": " que tal, que tal, que tal, hola.",
+        "respuesta": "Señor! Me alegra verte de nuevo. No parece que necesite algo específico en este momento. ¿O tal vez puede compartir conmigo su día o algo que esté pasando? Estoy aquí para escuchar y ayudar si puedo."
+    },
+    {
+        "usuario": " ¿Me puedes decir que día es hoy?",
+        "respuesta": "Señor, el día de hoy es lunes 17 de marzo de [anio]. ¿Necesita ayuda con algo en particular o simplemente quiere discutir su día? Estoy aquí para ayudarle."
+    },
+    {
+        "usuario": " Hola, hola, hola.",
+        "respuesta": "Señor, parece que no necesitas ayuda en este momento. ¿Necesitas algo más? Puedo ofrecerle servicios de organización y productividad si lo desea. Estoy aquí para ayudarle en cualquier cosa que requiera."
+    },
+    {
+        "usuario": " magnets.",
+        "respuesta": "Señor, parece que ha iniciado una conversación conmigo pero no ha especificado qué desea hablar o requerir ayuda. ¿Podría decirme más sobre lo que necesita o con qué se preocupa? Estoy aquí para escuchar y ayudarle en cualquier cosa que requiera."
+    },
+    {
+        "usuario": " y y y y y y y y y y y y y y",
+        "respuesta": "Señor, parece que ha iniciado una conversación conmigo pero no ha especificado qué desea hablar o requerir ayuda. Si lo desea, puedo ofrecerle servicios de organización y productividad para ayudarle a enfocarse en su día.\n\nPor otro lado, si se siente abrumado por la cantidad de \"y\" que ha escrito, puedo sugerirle una actividad para relajarse, como leer un artículo o escuchar música. ¿Le gustaría algo en particular?"
+    },
+    {
+        "usuario": "salir",
+        "respuesta": "Señor, ha iniciado una sesión de conversación conmigo. ¿Necesita ayuda con algo específico o simplemente quiere discutir su día? Estoy aquí para ayudarle en cualquier cosa que requiera.\n\nPuedo ofrecerle servicios de organización y productividad si lo desea. También puedo proporcionar información sobre temas como la programación, el desarrollo web, la Inteligencia Artificial y más.\n\n¿En qué puedo ayudarle hoy, Señor?"
     }
 ]
